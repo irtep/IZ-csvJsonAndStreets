@@ -3,7 +3,7 @@
 import csv
 import json
 
-csvfile = open('data/testidata.csv', 'r')
+csvfile = open('dataInput/testidata.csv', 'r')
 #jsonfile = open('data/testi2.json', 'w')
 
 #fieldnames = ("id",
@@ -21,7 +21,7 @@ for row in reader:
   entries.append(row)
 
 #print(entries[1])
-with open('data/newTest.json', 'w') as jsonfile:
+with open('dataInput/newTest.json', 'w') as jsonfile:
   json.dump(entries, jsonfile)
   jsonfile.write('\n')
 
