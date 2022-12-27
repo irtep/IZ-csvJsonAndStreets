@@ -3,8 +3,8 @@
 import csv
 import json
 
-csvfile = open('files/csv/input/demo.csv', 'r')
-jsonfile = open('files/csv/input/demo.csv', 'w')
+csvfile = open('data/testidata.csv', 'r')
+jsonfile = open('data/testi.json', 'w')
 
 #fieldnames = ("id",
 #              "team_name",
