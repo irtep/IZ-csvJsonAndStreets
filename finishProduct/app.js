@@ -1,36 +1,59 @@
-import * as fs from 'fs';
-
-import { checkIfThere } from './functions/functions.js';
+const fs = require('fs');
+const jsonexport = require('jsonexport');
 
 let sortedArray = undefined;
 
-fs.readFile('../dataInput/newTest.json', 'utf8', (err, data) => {
+// this sorts it so, that only one entry per card, contacts added.
+// also sanitates the streets (not yet done)
+const sortEntries = (json) => {
+  const newArray = [];
+  let indexFound = undefined;
+
+  json.forEach( (element, i) => {
+    let isAlreadyThere = false;    
+
+    // check if this card_id is already in newArray
+    newArray.forEach( (ele, ii) => {
+      if (ele.card_id === element.card_id) {
+        isAlreadyThere = true;
+        indexFound = ii;
+      }
+    });
+
+    // if is not, push it there
+    if (isAlreadyThere === false) {
+        newArray.push(element);
+    } else {
+        // if is, then add to old entry to these fields:
+        const thisEntry = newArray[indexFound];
+
+        // visits, web_contacts_count, application_contacts_count, calls
+        thisEntry.VISITS = Number(thisEntry.VISITS) + Number(element.VISITS);
+        thisEntry.WEB_CONTACTS_COUNT = Number(thisEntry.WEB_CONTACTS_COUNT) + Number(element.WEB_CONTACTS_COUNT);
+        thisEntry.APPLICATION_CONTACTS_COUNT = Number(thisEntry.APPLICATION_CONTACTS_COUNT) + Number(element.APPLICATION_CONTACTS_COUNT);
+        thisEntry.CALLS = Number(thisEntry.CALLS) + Number(element.CALLS);
+    }
+  });
+
+  return newArray;
+}
+
+fs.readFile('../dataInput/newTest.json', 'utf8', async (err, data) => {
 
   if (err) throw err;
 
-  const json = JSON.parse(data);
-  //console.log(json[0]);
-  // this removes dublicates and ads those contacts from that, to earlier
-  sortedArray = checkIfThere(json);
+  const json = await JSON.parse(data);
+  
+  sortedArray = sortEntries(json);
   console.log('sorted: ', sortedArray.length);
 
-  // then from json to csv
-// could try this: https://stackoverflow.com/questions/38244285/how-to-convert-json-array-to-csv-using-node-js
-  // choose another string to temporally replace commas if necessary
-let stringToReplaceComas = '!!!!';
+  const convert = jsonexport(sortedArray, function (err, csv){
+    fs.writeFile('../dataOutput/outputTest.csv', csv, function(err) {
+      if (err) return console.error(err);
+      console.log('saved!');
+    });
+  });
 
-sortedArray.map((singleRow) => {
-  console.log('sR ', singleRow);
-  singleRow.map((value, index) => { // tässä joku error...
-    singleRow[index] = value.replace(/,/g, stringToReplaceComas);
-  })
-})
-
-let csv = `"${sortedArray.join('"\n"').replace(/,/g, '","')}"`;
-// // or like this
-// let csv = `"${myObj.rows.join('"\n"').split(',').join('","')}"`;
-
-csv = csv.replace(new RegExp(`${stringToReplaceComas}`, 'g'), ',');
 });
 
 
