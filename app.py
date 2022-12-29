@@ -3,29 +3,22 @@
 import csv
 import json
 
-csvfile = open('dataInput/testidata.csv', 'r')
-#jsonfile = open('data/testi2.json', 'w')
+# input file, that should be cvs, the raw data
+input_file = 'dataInput/lujakoti_raw_2912221328.csv'
+# output file, that is converted to json. in input file as it is input for finishProduct
+# if you change this, change from finishProduct too
+output_file = 'dataInput/newJson.json' 
 
-#fieldnames = ("id",
-#              "team_name",
-#              "team_members")
+csvfile = open(input_file, 'r')
 
-reader = csv.DictReader( csvfile) # without headers
-# reader = csv.DictReader( csvfile, fieldnames) # with headers
+reader = csv.DictReader( csvfile)
 entries = []
 
 for row in reader:
-    # testi 2
-#    json.dump(row, jsonfile)
-#    jsonfile.write('\n')
   entries.append(row)
 
-#print(entries[1])
-with open('dataInput/newTest.json', 'w') as jsonfile:
+with open(output_file, 'w') as jsonfile:
   json.dump(entries, jsonfile)
   jsonfile.write('\n')
 
-# for row in reader:
-#     row['team_members'] = row['team_members'].split(',')
-#     json.dump(row, jsonfile)
-#     jsonfile.write('\n')
+# to start in mac, type: python3 app.py 
