@@ -4,7 +4,7 @@ import csv
 import json
 
 # input file, that should be cvs, the raw data
-input_file = 'dataInput/lujakoti_raw_2912221328.csv'
+input_file = 'dataInput/cbre_demo_marras22.csv'
 # output file, that is converted to json. in input file as it is input for finishProduct
 # if you change this, change from finishProduct too
 output_file = 'dataInput/newJson.json' 

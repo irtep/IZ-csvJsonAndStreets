@@ -5,7 +5,7 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/nayteLujakoti.csv'
+const outputFile = '../dataOutput/nayte_cbre_marras22.csv'
 
 let sortedArray = undefined;
 
