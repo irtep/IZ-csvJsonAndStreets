@@ -8,7 +8,7 @@ const inputFile = '../dataInput/newJson.json';
 const outputFile = '../dataOutput/jatke_22syys22-31joulu22.csv'
 
 // select mode, so change that string here if need to change:
-const mode = 'sanitateStreets';
+const mode = 'calculateEmptyValues';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -35,6 +35,12 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
   if (mode === 'sanitateStreets') {
     sortedArray = tools.streetSanitation(json);
     console.log('(sanitateStreets mode)rows sorted: ', sortedArray.length);
+  }  
+
+  if (mode === 'calculateEmptyValues') {
+    console.log('calculate empty values, calling...');
+    sortedArray = tools.calculateEmptyValues(json);
+    //console.log('(calculateEmptyValues mode)rows sorted: ', sortedArray.length);
   }  
 
   // then in most cases, where we need output, this happens:

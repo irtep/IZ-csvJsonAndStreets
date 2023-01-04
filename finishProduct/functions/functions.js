@@ -117,9 +117,25 @@ module.exports = {
 
   // only calculates empty values as customer asked (WIP)
   calculateEmptyValues: function (json) {
-    console.log('calculating empty values starts');
-  },
+    const values = {};
+    var keys = [];
 
+    // get keys from entry
+    for(var key in json[0]) {
+      if(json[0].hasOwnProperty(key)) { //to be safe
+        keys.push(key);
+      }
+    }
+
+    console.log('keys: ', keys);
+
+    // give values properties, with value 0
+    keys.forEach( key => {
+      values[key] = 0;
+    })
+    console.log('values: ', values);
+  },
+  
   // this sanitates the streets by GDBR regulation, no visits or clicks in these handled
   // removes dublicates as well as Jatke did not want them
   streetSanitation: function (json) {
