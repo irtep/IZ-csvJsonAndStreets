@@ -4,7 +4,7 @@ import csv
 import json
 
 # input file, that should be cvs, the raw data
-input_file = 'dataInput/cbre_demo_marras22.csv'
+input_file = 'dataInput/raw_jatke_22sept22-31dec22.csv'
 # output file, that is converted to json. in input file as it is input for finishProduct
 # if you change this, change from finishProduct too
 output_file = 'dataInput/newJson.json' 
@@ -22,3 +22,4 @@ with open(output_file, 'w') as jsonfile:
   jsonfile.write('\n')
 
 # to start in mac, type: python3 app.py 
+# does not say anything like "ready" or anything, it just does it
