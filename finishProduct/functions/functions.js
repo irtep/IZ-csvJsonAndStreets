@@ -120,20 +120,41 @@ module.exports = {
     const values = {};
     var keys = [];
 
-    // get keys from entry
+    // get keys from entry. json[0] is the first entry
     for(var key in json[0]) {
       if(json[0].hasOwnProperty(key)) { //to be safe
         keys.push(key);
       }
     }
 
-    console.log('keys: ', keys);
-
-    // give values properties, with value 0
+    // give values properties, where calculations are made
     keys.forEach( key => {
-      values[key] = 0;
+      values[key] = {filled: 0, empty: 0, percentEmpty: 0};
     })
+    
+    // check all rows and fill the values
+    json.forEach( element => {
+      for(var key in element) {
+        if(element.hasOwnProperty(key)) { //to be safe
+          //console.log(element[key]);
+          if (element[key] === '') {
+            values[key].empty++;
+          } else {
+            values[key].filled++;
+          }
+        }
+      }     
+    });
+
+    // calculate percent values
+    for(var key in values) {
+      const totalRows = values[key].filled + values[key].empty;
+
+      values[key].percentEmpty = (values[key].empty / totalRows) * 100;
+    }
+
     console.log('values: ', values);
+    return values;
   },
   
   // this sanitates the streets by GDBR regulation, no visits or clicks in these handled

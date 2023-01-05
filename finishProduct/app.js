@@ -5,18 +5,18 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/jatke_22syys22-31joulu22.csv'
+const outputFile = '../dataOutput/cbre_stats.csv'
 
 // select mode, so change that string here if need to change:
 const mode = 'calculateEmptyValues';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
- its own row. For example: Case Lujakoti and Case CBRE
+ its own row. For example: Case HardHome and Case ERBC
 'calculateEmptyValues': this gives to console numbers and percentages of empty values,
- Case CBRE as well
+ Case ERBC as well
 'sanitateStreets: in this there are no visits, clicks etc. Just regular street sanitation,
-for example in Case Jatke
+for example in Case Continuacion
 */
 
 let sortedArray = undefined;
@@ -44,14 +44,15 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
   }  
 
   // then in most cases, where we need output, this happens:
-  if (mode !== 'calculateEmptyValues') {
+  // commented out as might need condition, while developing new stuff
+ // if (mode !== 'calculateEmptyValues') {
     const convert = jsonexport(sortedArray, function (err, csv){
       fs.writeFile(outputFile, csv, function(err) {
         if (err) return console.error(err);
         console.log(`saved as: ${outputFile}`);
       });
     });
-  }
+  //}
 });
 
 // to start:
