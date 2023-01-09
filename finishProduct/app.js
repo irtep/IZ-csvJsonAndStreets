@@ -5,10 +5,10 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/cbre_stats.csv'
+const outputFile = '../dataOutput/jatke_tammikuu_2023.csv'
 
 // select mode, so change that string here if need to change:
-const mode = 'calculateEmptyValues';
+const mode = 'sanitateStreets';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -16,7 +16,7 @@ Modes:
 'calculateEmptyValues': this gives to console numbers and percentages of empty values,
  Case ERBC as well
 'sanitateStreets: in this there are no visits, clicks etc. Just regular street sanitation,
-for example in Case Continuacion
+for example in Case Continuacion. Also removes dublicates (wish from Continuacion)
 */
 
 let sortedArray = undefined;
