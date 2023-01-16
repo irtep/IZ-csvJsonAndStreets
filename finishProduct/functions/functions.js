@@ -199,4 +199,168 @@ module.exports = {
     console.log('dublicates removed: ', dublicates);
     return newArray;
   },  
+
+    // this gives statistic summary of listings
+    // params: city(string), zip_codes(array)
+    // returns as
+    /*
+    {
+      00010: {
+        {
+          all: {
+            average: 1000,
+            highest: 5000,
+            lowest: 990
+          },
+          buildYear2020to2023: {
+            {
+              1h: {
+            average: 1000,
+            highest: 5000,
+            lowest: 990
+            },
+              2h: {
+
+            },
+              3h: {
+
+            },
+          },
+          buildYear2010-2020: {
+            average: 1000,
+            highest: 5000,
+            lowest: 990
+          },
+          buildYear2000-2010: {
+            average: 1000,
+            highest: 5000,
+            lowest: 990            
+          },
+          buildYear1990-2000: {
+            average: 1000,
+            highest: 5000,
+            lowest: 990           
+          },
+          buildYear1980-1990: {
+            average: 1000,
+            highest: 5000,
+            lowest: 990           
+          },
+          buildYear1970-1980: {
+            average: 1000,
+            highest: 5000,
+            lowest: 990            
+          },
+          buildYearOlderThan1970: {
+            average: 1000,
+            highest: 5000,
+            lowest: 990          
+          }
+          
+        }
+
+      },
+      01000: {
+        average: 1200,
+        highest: 5000,
+        lowest: 990
+      }
+
+    }
+    */
+    listingsStats: function (json) {
+      console.log('lS starts');
+      const values = {};
+      var zip_codes = [];
+      const totalRooms = 11;        
+      const yearRanges = [
+        'all',
+        'buildYears2021to2030',
+        'buildYears2011to2020',
+        'buildYears2001to2010',
+        'buildYears1991to2000',
+        'buildYears1981to1990',
+        'buildYears1971to1980',
+        'buildYears1961to1970',
+        'olderThan1960'
+      ];
+      const prices = {};
+       // fill prices:
+       yearRanges.forEach( yearRange => {
+        prices[yearRange] = [];
+      })  
+      // check all zip_codes and push them to array
+      json.forEach( element => {
+        dublicated = false;
+          
+        for (let i = 0; i < zip_codes.length; i++) {
+          if (element['zip_code'] === zip_codes[i]) {
+            dublicated = true;
+          }
+        }
+        if (dublicated === false) {
+          zip_codes.push(element['zip_code']);
+        }
+
+      });
+
+      // give values properties, where calculations are made
+      zip_codes.forEach( key => {
+        values[key] = {};
+        
+        // add year ranges
+        yearRanges.forEach( i => {
+          values[key][i] = {};
+        });
+      })
+
+      // ads object, where statistics are added
+      for (let i = 1; i < totalRooms; i++) {
+        zip_codes.forEach( zip => {
+          yearRanges.forEach( yearRange => {
+            values[zip][yearRange][i] = {average: 0, highest: 0, lowest: 0, quantity: 0};
+          })
+        });
+      } 
+
+      // check all rows and fill the values
+      json.forEach( element => {
+      //  console.log('json.lenght ', json.length);
+        let correctYearRange = 'undefined';
+ 
+        //console.log('prices: ', prices);
+        // check correct year range
+        // i dont like hardcoding, but head is empty, how i would get this nicer...
+        if (element['build_year'] < 1961) { correctYearRange =  'olderThan1960'}
+        if (element['build_year'] > 1960) { correctYearRange =  'buildYears1961to1970'}
+        if (element['build_year'] > 1970) { correctYearRange =  'buildYears1971to1980'}
+        if (element['build_year'] > 1980) { correctYearRange =  'buildYears1981to1990'}
+        if (element['build_year'] > 1990) { correctYearRange =  'buildYears1991to2000'}
+        if (element['build_year'] > 2000) { correctYearRange =  'buildYears2001to2010'}
+        if (element['build_year'] > 2010) { correctYearRange =  'buildYears2011to2020'}
+        if (element['build_year'] > 2020) { correctYearRange =  'buildYears2021to2030'}
+            
+            // fill prices
+           // console.log('cY ', element);
+        // can't set the year, if user did not give, but if gave, lets put it to right place
+        if (element['build_year'] !== '' && element['price'] > 0) {
+          prices[correctYearRange].push({zip: element['zip_code'], price: element['price'], year: element['build_year']});
+        }
+        // also, all goes to all
+        if (element['price'] > 0) {        
+          prices.all.push({zip: element['zip_code'], price: element['price'], year: element['build_year']});
+        }
+      });
+
+      // calculate and set all to proper places
+      // for each the yearRanges to access all from prices
+      yearRanges.forEach( yearRange => {
+        // can continue from here
+      });
+   
+  //   console.log('values: ', values);
+  //   console.log('value: ', values[40100].all);
+      console.log('prices: ', prices);
+      console.log('l :', prices.all.length);
+    }
 }

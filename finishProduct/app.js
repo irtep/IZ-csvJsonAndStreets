@@ -8,7 +8,7 @@ const inputFile = '../dataInput/newJson.json';
 const outputFile = '../dataOutput/jatke_tammikuu_2023.csv'
 
 // select mode, so change that string here if need to change:
-const mode = 'sanitateStreets';
+const mode = 'listingsStats';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -17,6 +17,9 @@ Modes:
  Case ERBC as well
 'sanitateStreets: in this there are no visits, clicks etc. Just regular street sanitation,
 for example in Case Continuacion. Also removes dublicates (wish from Continuacion)
+//
+work in process:
+'listingsStats': this gives stats summary of listings, no clicks, visits etc.
 */
 
 let sortedArray = undefined;
@@ -43,16 +46,23 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
     //console.log('(calculateEmptyValues mode)rows sorted: ', sortedArray.length);
   }  
 
+  if (mode === 'listingsStats') {
+    console.log('listings stats, calling...');
+    //console.log('json: ', json);
+    tools.listingsStats(json);
+    //console.log('(calculateEmptyValues mode)rows sorted: ', sortedArray.length);
+  }   
+
   // then in most cases, where we need output, this happens:
   // commented out as might need condition, while developing new stuff
- // if (mode !== 'calculateEmptyValues') {
+  if (mode !== 'listingsStats') {
     const convert = jsonexport(sortedArray, function (err, csv){
       fs.writeFile(outputFile, csv, function(err) {
         if (err) return console.error(err);
         console.log(`saved as: ${outputFile}`);
       });
     });
-  //}
+  }
 });
 
 // to start:
