@@ -208,9 +208,17 @@ module.exports = {
       00010: {
         {
           all: {
+              1h: {
             average: 1000,
             highest: 5000,
             lowest: 990
+            },
+              2h: {
+
+            },
+              3h: {
+
+            },
           },
           buildYear2020to2023: {
             {
@@ -289,6 +297,7 @@ module.exports = {
        yearRanges.forEach( yearRange => {
         prices[yearRange] = [];
       })  
+
       // check all zip_codes and push them to array
       json.forEach( element => {
         dublicated = false;
@@ -343,24 +352,64 @@ module.exports = {
             // fill prices
            // console.log('cY ', element);
         // can't set the year, if user did not give, but if gave, lets put it to right place
+        const summary = {
+          zip: element['zip_code'], price: element['price'], year: element['build_year'], rooms: element['rooms']
+        }
+
         if (element['build_year'] !== '' && element['price'] > 0) {
-          prices[correctYearRange].push({zip: element['zip_code'], price: element['price'], year: element['build_year']});
+          prices[correctYearRange].push(summary);
         }
         // also, all goes to all
         if (element['price'] > 0) {        
-          prices.all.push({zip: element['zip_code'], price: element['price'], year: element['build_year']});
+          prices.all.push(summary);
         }
       });
 
       // calculate and set all to proper places
       // for each the yearRanges to access all from prices
       yearRanges.forEach( yearRange => {
-        // can continue from here
+        const totals = {};
+        let highestRoomCount = 0;
+
+        // check highest room count on this year range:
+        prices[yearRange].forEach( range => {
+          if (range.rooms > highestRoomCount) { highestRoomCount = Number(range.rooms); }
+        });
+        //console.log('highest room count: ', highestRoomCount);
+        // create totals object:
+        for (let i = 0; i < highestRoomCount + 1; i++) {
+          totals[i] = {
+            total: 0,
+            highest: 0,
+            lowest: 100000000000,
+            average: 0,
+            quantity: 0,
+          }
+        }
+       // console.log('totals: ', totals[1].quantity);
+        for (let i = 0; i < prices[yearRange].length; i++) {
+          const currentRow = prices[yearRange][i];
+          const rooms = Number(currentRow.rooms);
+         // console.log('currentRow: ', currentRow);
+          totals[rooms].quantity++;
+          totals[rooms].total += Number(currentRow.price);
+          if (totals[rooms].highest < Number(currentRow.price)) { totals[rooms].highest = Number(currentRow.price); }
+          if (totals[rooms].lowest > Number(currentRow.price)) { totals[rooms].lowest = Number(currentRow.price); }
+          totals[rooms].average = totals[rooms].total / totals[rooms].quantity;
+         // console.log('ok, with i ', i, ' totals: ', totals[rooms]);
+        }
+
+        prices[yearRange].summary = totals;      
+
       });
    
   //   console.log('values: ', values);
   //   console.log('value: ', values[40100].all);
-      console.log('prices: ', prices);
+  //    console.log('prices: ', prices);
+  // pitäisi periaatteessa nyt toimii niin, että syöttää yhden alueen kerrallaan...
+  // pitää testata vielä.....
+  // saa silloin iän mukaan ja asunnon koon mukaan hinta statistiikan
       console.log('l :', prices.all.length);
+      console.log(prices.olderThan1960);
     }
 }
