@@ -409,6 +409,7 @@ module.exports = {
   // pitäisi periaatteessa nyt toimii niin, että syöttää yhden alueen kerrallaan...
   // pitää testata vielä.....
   // saa silloin iän mukaan ja asunnon koon mukaan hinta statistiikan
+  // pitää vaan muotoilla esim. total pois, varmaan nuo lähteet pois ja sitten, että tallentaa tiedostoon.
       console.log('l :', prices.all.length);
       console.log(prices.olderThan1960);
     }
