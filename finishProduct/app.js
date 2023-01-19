@@ -5,7 +5,10 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/jatke_tammikuu_2023.csv'
+const outputFile = '../dataOutput/stats_test_1.csv'
+
+// save file. switch this, if testing and is not necessary save the results
+const saveFile = true;
 
 // select mode, so change that string here if need to change:
 const mode = 'listingsStats';
@@ -49,13 +52,13 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
   if (mode === 'listingsStats') {
     console.log('listings stats, calling...');
     //console.log('json: ', json);
-    tools.listingsStats(json);
+    sortedArray = tools.listingsStats(json);
     //console.log('(calculateEmptyValues mode)rows sorted: ', sortedArray.length);
   }   
 
   // then in most cases, where we need output, this happens:
   // commented out as might need condition, while developing new stuff
-  if (mode !== 'listingsStats') {
+  if (saveFile === true) {
     const convert = jsonexport(sortedArray, function (err, csv){
       fs.writeFile(outputFile, csv, function(err) {
         if (err) return console.error(err);
