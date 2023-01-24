@@ -5,13 +5,14 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/stats_test_1.csv'
+const outputFile = '../dataOutput/filtered_hki6months_jatke.csv'
 
 // save file. switch this, if testing and is not necessary save the results
-const saveFile = true;
+// options: 'csv', 'json', false
+const saveFile = false;
 
 // select mode, so change that string here if need to change:
-const mode = 'listingsStats';
+const mode = 'withVisits';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -23,6 +24,8 @@ for example in Case Continuacion. Also removes dublicates (wish from Continuacio
 //
 work in process:
 'listingsStats': this gives stats summary of listings, no clicks, visits etc.
+'cryptedAddress': creates simple crypt, for SALO case, where they need to identify, which addresses are same
+maybe cryptedAddress is not necessary, as only one customer reqs this and theCleaner does that just fine
 */
 
 let sortedArray = undefined;
@@ -38,6 +41,7 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
     sortedArray = tools.sortEntries(json);
     console.log('(withVisits mode) rows sorted: ', sortedArray.length);
   }
+  
   if (mode === 'sanitateStreets') {
     sortedArray = tools.streetSanitation(json);
     console.log('(sanitateStreets mode)rows sorted: ', sortedArray.length);
@@ -56,9 +60,14 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
     //console.log('(calculateEmptyValues mode)rows sorted: ', sortedArray.length);
   }   
 
+  if (mode === 'cryptedAddress') {
+    console.log('calling cryptedAddresses');
+    sortedArray = tools.cryptedAddress(json);
+    console.log('sorted: ', sortedArray);
+  }
   // then in most cases, where we need output, this happens:
   // commented out as might need condition, while developing new stuff
-  if (saveFile === true) {
+  if (saveFile === 'csv') {
     const convert = jsonexport(sortedArray, function (err, csv){
       fs.writeFile(outputFile, csv, function(err) {
         if (err) return console.error(err);

@@ -394,5 +394,15 @@ module.exports = {
     40100: {buildYears2021to2030: {low: 100, high: 400, average: 300}, buildYears.....} 
     */
       return all;
-    }
+    },
+
+    // crypts values of streets, for SALO case...
+    cryptedAddress: function (json) {
+      // not sure if this will be needed, as rare case.
+      // maybe those rare cases when used, could use the old app, TheCleaner
+      // https://dpera005xamk.github.io/addressCleaner/
+      const all = [];
+     
+      return all;
+    }    
 }
