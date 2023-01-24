@@ -5,14 +5,14 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/filtered_hki6months_jatke.csv'
+const outputFile = '../dataOutput/helsinki_for_sale_dec22.csv'
 
 // save file. switch this, if testing and is not necessary save the results
 // options: 'csv', 'json', false
-const saveFile = false;
+const saveFile = 'csv';
 
 // select mode, so change that string here if need to change:
-const mode = 'withVisits';
+const mode = 'listingsStats2';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -24,6 +24,14 @@ for example in Case Continuacion. Also removes dublicates (wish from Continuacio
 //
 work in process:
 'listingsStats': this gives stats summary of listings, no clicks, visits etc.
+'listingsStats2': /**
+       * should try this for clientknowdledge:
+       * Kerrostalo yksiöt
+         Kerrostalo kaksiot
+         Kerrostalo kolmiot+
+         Rivitalot yhteensä
+         Omakotitalot yhteensä
+      
 'cryptedAddress': creates simple crypt, for SALO case, where they need to identify, which addresses are same
 maybe cryptedAddress is not necessary, as only one customer reqs this and theCleaner does that just fine
 */
@@ -60,6 +68,13 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
     //console.log('(calculateEmptyValues mode)rows sorted: ', sortedArray.length);
   }   
 
+  if (mode === 'listingsStats2') {
+    console.log('listings stats2, calling...');
+    //console.log('json: ', json);
+    sortedArray = tools.listingsStats2(json);
+    //console.log('(calculateEmptyValues mode)rows sorted: ', sortedArray.length);
+  }     
+
   if (mode === 'cryptedAddress') {
     console.log('calling cryptedAddresses');
     sortedArray = tools.cryptedAddress(json);
@@ -73,6 +88,14 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
         if (err) return console.error(err);
         console.log(`saved as: ${outputFile}`);
       });
+    });
+  }
+
+  if (saveFile === 'json') {
+    // fs.writeFile( file, data, options, callback )
+    fs.writeFile(outputFile, JSON.stringify(sortedArray), function(err) {
+      if (err) return console.error(err);
+        console.log(`saved as: ${outputFile}`);
     });
   }
 });
