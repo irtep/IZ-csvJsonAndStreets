@@ -1,5 +1,134 @@
 
-// updates calculations to stat row
+// updates calculations to stat row, for demandStats
+const updateDemandStatsRow = (entry, namesOfRows, visits) => {
+  //console.log('stat update: ', entry[namesOfRows[0]], Number(visits));
+  //if (entry[namesOfRows[0]] === undefined) {
+  //  console.log('undefined in: ', namesOfRows);
+  //}
+  // quantities
+  entry[namesOfRows[0]]++;
+  // total visits
+  entry[namesOfRows[1]] += Number(visits);
+  // update calculations
+  entry[namesOfRows[2]] = entry[namesOfRows[1]] / entry[namesOfRows[0]];
+
+  return entry;
+}
+
+// updates the row, for demandStats
+const updateDemandRow = (entry, row) => {
+  // apartments:
+  if (row.building_type === '1') {
+    if (row.rooms === '1') {
+      const rowsToUpdate = [
+        'kerrostalo_yksioita_yhteensa',
+        'kerrostalo_yksioiden_klikkaukset_yhteensa',
+        'kerrostalo_yksiot_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+    else if (row.rooms === '2') {
+      const rowsToUpdate = [
+        'kerrostalo_kaksioita_yhteensa',
+        'kerrostalo_kaksioiden_klikkaukset_yhteensa',
+        'kerrostalo_kaksiot_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+    else if (Number(row.rooms) > 2) {
+      const rowsToUpdate = [
+        'kerrostalo_kolmiotTaiIsommat_yhteensa',
+        'kerrostalo_kolmiotTaiIsommat_klikkaukset_yhteensa',
+        'kerrostalo_kolmiotTaiIsommat_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+  }
+  // row houses:
+  else if (row.building_type === '2') {              
+    if (row.rooms === '1') {
+      const rowsToUpdate = [
+        'rivitalo_yksioita_yhteensa',
+        'rivitalo_yksioiden_klikkaukset_yhteensa',
+        'rivitalo_yksiot_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+    else if (row.rooms === '2') {
+      const rowsToUpdate = [
+        'rivitalo_kaksioita_yhteensa',
+        'rivitalo_kaksioiden_klikkaukset_yhteensa',
+        'rivitalo_kaksiot_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+    else if (Number(row.rooms) > 2) {
+      const rowsToUpdate = [
+        'rivitalo_kolmiotTaiIsommat_yhteensa',
+        'rivitalo_kolmiotTaiIsommat_klikkaukset_yhteensa',
+        'rivitalo_kolmiotTaiIsommat_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+  }        
+  // own houses:
+  else if (row.building_type === '4') {
+    if (row.rooms === '1') {
+      const rowsToUpdate = [
+        'omakotitalo_yksioita_yhteensa',
+        'omakotitalo_yksioiden_klikkaukset_yhteensa',
+        'omakotitalo_yksiot_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+    else if (row.rooms === '2') {
+      const rowsToUpdate = [
+        'omakotitalo_kaksioita_yhteensa',
+        'omakotitalo_kaksioiden_klikkaukset_yhteensa',
+        'omakotitalo_kaksiot_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+    else if (Number(row.rooms) > 2) {
+      const rowsToUpdate = [
+        'omakotitalo_kolmiotTaiIsommat_yhteensa',
+        'omakotitalo_kolmiotTaiIsommat_klikkaukset_yhteensa',
+        'omakotitalo_kolmiotTaiIsommat_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+  }  
+  // others
+  else {
+    if (row.rooms === '1') {
+      const rowsToUpdate = [
+        'muut_yksioita_yhteensa',
+        'muut_yksioiden_klikkaukset_yhteensa',
+        'muut_yksiot_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+    else if (row.rooms === '2') {
+      const rowsToUpdate = [
+        'muut_kaksioita_yhteensa',
+        'muut_kaksioiden_klikkaukset_yhteensa',
+        'muut_kaksiot_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+    else if (Number(row.rooms) > 2) {
+      const rowsToUpdate = [
+        'muut_kolmiotTaiIsommat_yhteensa',
+        'muut_kolmiotTaiIsommat_klikkaukset_yhteensa',
+        'muut_kolmiotTaiIsommat_keskiarvo'
+      ];
+      entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+    }
+  }  
+return entry;
+}
+
+// updates calculations to stat row, for listingStats
 const updateStatsRow = (entry, namesOfRows, price) => {
   //console.log('stat update: ', entry[namesOfRows[0]], Number(price));
   //if (entry[namesOfRows[0]] === undefined) {
@@ -15,7 +144,7 @@ const updateStatsRow = (entry, namesOfRows, price) => {
   return entry;
 }
 
-// updates the row
+// updates the row, for listingStats
 const updateRow = (entry, row) => {
           // apartments:
           if (row.building_type === '1') {
@@ -127,7 +256,9 @@ const updateRow = (entry, row) => {
           }  
   return entry;
 }
+
 // sorts listings data by zip_codes
+/* not in use i think, so commented out
 const sortByZips = (json) => {
   let zip_codes = [];
   let byZipCodes = [];
@@ -155,8 +286,10 @@ const sortByZips = (json) => {
 
   return byZipCodes;
 };
+*/
 
 // this makes the statistics, and divides it by build years
+/* not in use, i think, so commented out
 const createStatsByBuildYears = (json) => {
   console.log('lS starts');
   const values = {};
@@ -285,7 +418,7 @@ const createStatsByBuildYears = (json) => {
   console.log('pl ', priceList);
   return priceList;
 }
-
+*/
 
 // this returns the address so, that all numbers are gone
 // for example kopparinkatu 2 b 99 => kopparinkatu
@@ -489,45 +622,8 @@ module.exports = {
   },  
 
     // this gives statistic summary of listings
-    listingsStats: function (json) {
-      // first, divide by post numbers (zip_code)
-      const all = [];
-      const divided = sortByZips(json);
-      //console.log('divided: ', divided);
-
-      // roll all of those to createStats and push to all constant
-      divided.forEach( zip => {
-        const zips = createStatsByBuildYears(zip)
-        all.push({area: zip[0].zip_code, stats: zips});
-      });
-      
-      //console.log('all: ', all);
-      // these are ok, just need to simplify them, so that csv will be readable.
-      /*
-      this kind of json works:
-      values:  {
-  card_id: { filled: 100, empty: 0, percentEmpty: 0 },
-  card_type: { filled: 100, empty: 0, percentEmpty: 0 },
-  oikotie_company_id: { filled: 64, empty: 36, percentEmpty: 36 },
-  contract_type: { filled: 100, empty: 0, percentEmpty: 0 },
-  street_address: { filled: 100, empty: 0, percentEmpty: 0 }...
-  shows in excel:
-  Column1                 Column2
-  card.id.filled          100
-  card.id.empty           0
-  card.is.percentEmpty    0
-  card_type.filled        100.....
-      */
-     /*
-    maybe should be like:
-    40100: {buildYears2021to2030: {low: 100, high: 400, average: 300}, buildYears.....} 
-    */
-      return all;
-    },
-
-    // this gives statistic summary of listings
     // aka. CLIENTKNOWLEDGE case
-    listingsStats2: function (json) {
+    listingsStats: function (json) {
       //console.log('looks like this: ', json);
       
       const stats = [];
@@ -727,14 +823,206 @@ module.exports = {
      //console.log('stats: ', stats);
       return stats;
     },    
+    // this gives statistic summary of demand
+    // 
+    demandStats: function (json) {
+      //console.log('looks like this: ', json);
+      
+      const stats = [];
+      
+      // for each all rows
+      json.forEach( row => {
+        let dublicated = false;
+        // for each all stats, to check if zip_code already there
+        stats.forEach( (entry, i) => {
+          if (row.zip_code === entry.postinumero) {
+            // mark as dublicated
+            dublicated = true;
+            // and add the stats
+            entry = updateDemandRow(entry, row);
+          }
+        });
 
-    // crypts values of streets, for SALO case...
-    cryptedAddress: function (json) {
-      // not sure if this will be needed, as rare case.
-      // maybe those rare cases when used, could use the old app, TheCleaner
-      // https://dpera005xamk.github.io/addressCleaner/
-      const all = [];
-     
-      return all;
-    }    
+        // if not there already, make a new entry
+        if (dublicated === false) {
+          let entry = {
+            // averages
+            postinumero: row.zip_code,
+            kerrostalo_yksiot_keskiarvo: 0,
+            kerrostalo_kaksiot_keskiarvo: 0,
+            kerrostalo_kolmiotTaiIsommat_keskiarvo: 0,
+            rivitalo_yksiot_keskiarvo: 0,
+            rivitalo_kaksiot_keskiarvo: 0,
+            rivitalo_kolmiotTaiIsommat_keskiarvo: 0,
+            omakotitalo_yksiot_keskiarvo: 0,
+            omakotitalo_kaksiot_keskiarvo: 0,
+            omakotitalo_kolmiotTaiIsommat_keskiarvo: 0,
+            muut_yksiot_keskiarvo: 0,
+            muut_kaksiot_keskiarvo: 0,
+            muut_kolmiotTaiIsommat_keskiarvo: 0,
+            // quantities
+            kerrostalo_yksioita_yhteensa: 0,
+            kerrostalo_kaksioita_yhteensa: 0,
+            kerrostalo_kolmiotTaiIsommat_yhteensa: 0,
+            rivitalo_yksioita_yhteensa: 0,
+            rivitalo_kaksioita_yhteensa: 0,
+            rivitalo_kolmiotTaiIsommat_yhteensa: 0,
+            omakotitalo_yksioita_yhteensa: 0,
+            omakotitalo_kaksioita_yhteensa: 0,
+            omakotitalo_kolmiotTaiIsommat_yhteensa: 0,
+            muut_yksioita_yhteensa: 0,
+            muut_kaksioita_yhteensa: 0,
+            muut_kolmiotTaiIsommat_yhteensa: 0,
+            // visits total
+            kerrostalo_yksioiden_klikkaukset_yhteensa: 0,
+            kerrostalo_kaksioiden_klikkaukset_yhteensa: 0,
+            kerrostalo_kolmiotTaiIsommat_klikkaukset_yhteensa: 0,
+            rivitalo_yksioiden_klikkaukset_yhteensa: 0,
+            rivitalo_kaksioiden_klikkaukset_yhteensa: 0,
+            rivitalo_kolmiotTaiIsommat_klikkaukset_yhteensa: 0,
+            omakotitalo_yksioiden_klikkaukset_yhteensa: 0,
+            omakotitalo_kaksioiden_klikkaukset_yhteensa: 0,
+            omakotitalo_kolmiotTaiIsommat_klikkaukset_yhteensa: 0,
+            muut_yksioiden_klikkaukset_yhteensa: 0,
+            muut_kaksioiden_klikkaukset_yhteensa: 0,
+            muut_kolmiotTaiIsommat_klikkaukset_yhteensa: 0,
+          }
+
+          // add what it is and how many time it was clicked
+         
+          // apartments:
+          if (row.building_type === '1') {
+            if (row.rooms === '1') {
+              const rowsToUpdate = [
+                'kerrostalo_yksioita_yhteensa',
+                'kerrostalo_yksioiden_klikkaukset_yhteensa',
+                'kerrostalo_yksiot_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+            else if (row.rooms === '2') {
+              const rowsToUpdate = [
+                'kerrostalo_kaksioita_yhteensa',
+                'kerrostalo_kaksioiden_klikkaukset_yhteensa',
+                'kerrostalo_kaksiot_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+            else if (Number(row.rooms) > 2) {
+              const rowsToUpdate = [
+                'kerrostalo_kolmiotTaiIsommat_yhteensa',
+                'kerrostalo_kolmiotTaiIsommat_klikkaukset_yhteensa',
+                'kerrostalo_kolmiotTaiIsommat_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+          }
+          // row houses:
+          else if (row.building_type === '2') {              
+            if (row.rooms === '1') {
+              const rowsToUpdate = [
+                'rivitalo_yksioita_yhteensa',
+                'rivitalo_yksioiden_klikkaukset_yhteensa',
+                'rivitalo_yksiot_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+            else if (row.rooms === '2') {
+              const rowsToUpdate = [
+                'rivitalo_kaksioita_yhteensa',
+                'rivitalo_kaksioiden_klikkaukset_yhteensa',
+                'rivitalo_kaksiot_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+            else if (Number(row.rooms) > 2) {
+              const rowsToUpdate = [
+                'rivitalo_kolmiotTaiIsommat_yhteensa',
+                'rivitalo_kolmiotTaiIsommat_klikkaukset_yhteensa',
+                'rivitalo_kolmiotTaiIsommat_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+          }        
+          // own houses:
+          else if (row.building_type === '4') {
+            if (row.rooms === '1') {
+              const rowsToUpdate = [
+                'omakotitalo_yksioita_yhteensa',
+                'omakotitalo_yksioiden_klikkaukset_yhteensa',
+                'omakotitalo_yksiot_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+            else if (row.rooms === '2') {
+              const rowsToUpdate = [
+                'omakotitalo_kaksioita_yhteensa',
+                'omakotitalo_kaksioiden_klikkaukset_yhteensa',
+                'omakotitalo_kaksiot_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+            else if (Number(row.rooms) > 2) {
+              const rowsToUpdate = [
+                'omakotitalo_kolmiotTaiIsommat_yhteensa',
+                'omakotitalo_kolmiotTaiIsommat_klikkaukset_yhteensa',
+                'omakotitalo_kolmiotTaiIsommat_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+          }  
+          // others
+          else {
+            if (row.rooms === '1') {
+              const rowsToUpdate = [
+                'muut_yksioita_yhteensa',
+                'muut_yksioiden_klikkaukset_yhteensa',
+                'muut_yksiot_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+            else if (row.rooms === '2') {
+              const rowsToUpdate = [
+                'muut_kaksioita_yhteensa',
+                'muut_kaksioiden_klikkaukset_yhteensa',
+                'muut_kaksiot_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+            else if (Number(row.rooms) > 2) {
+              const rowsToUpdate = [
+                'muut_kolmiotTaiIsommat_yhteensa',
+                'muut_kolmiotTaiIsommat_klikkaukset_yhteensa',
+                'muut_kolmiotTaiIsommat_keskiarvo'
+              ];
+              entry = updateDemandStatsRow(entry, rowsToUpdate, row.VISITS);
+            }
+          }              
+          stats.push(entry);
+        }
+
+      });
+      /*
+      /**
+       * should try this for clientknowdledge:
+       * Kerrostalo yksiöt
+         Kerrostalo kaksiot
+         Kerrostalo kolmiot+
+         Rivitalot yhteensä
+         Omakotitalot yhteensä
+      */
+     /*
+    maybe should be like:
+    {postinumero: 4100, kerrostaloYksiot: 400, kerrostaloKaksiot: 304, RivitaloYksiot: 440}
+    */
+   /*
+      const test = [
+        {postinumero: 4100, kerrostaloYksiot: 400, kerrostaloKaksiot: 304, RivitaloYksiot: 440},
+        {postinumero: 4140, kerrostaloYksiot: 400, kerrostaloKaksiot: 304, RivitaloYksiot: 440},
+        {postinumero: 4340, kerrostaloYksiot: 400, kerrostaloKaksiot: 304, RivitaloYksiot: 440}
+      ];
+      */
+     //console.log('stats: ', stats);
+      return stats;
+    }   
 }
