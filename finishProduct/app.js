@@ -5,14 +5,14 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/visitsStatsExpample_hki_dec22.csv'
+const outputFile = '../dataOutput/Vuo_lautta_myynnissa_kysynta_07-12_22_stats.csv'
 
 // save file. switch this, if testing and is not necessary save the results
 // options: 'csv', false
-const saveFile = 'csv';
+const saveFile = false;
 
 // select mode, so change that string here if need to change:
-const mode = 'demandStats';
+const mode = 'clientKnowledgeAveragePrices';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -22,7 +22,8 @@ Modes:
 'sanitateStreets: in this there are no visits, clicks etc. Just regular street sanitation,
 for example in Case Continuacion. Also removes dublicates (wish from Continuacion),
 'listingsStats': This creates a statistic display, by zip_codes, listings.
-'demandStats': Same as above, but gives stats about demands (visits)
+'demandStats': Same as above, but gives stats about demands (visits),
+'clientKnowledgeAveragePrices' clientKnowledge product case, lists prices, same as listingsStats, but by squaremeter prices, and added name of town
 //
 */
 
@@ -70,6 +71,13 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
     sortedArray = tools.cryptedAddress(json);
     console.log('sorted: ', sortedArray);
   }
+
+  if (mode === 'clientKnowledgeAveragePrices') {
+    console.log('calling client knowledge 1');
+    sortedArray = tools.clientKnowledgeAveragePrices(json);
+    console.log('sorted: ', sortedArray);
+  }
+
   // then in most cases, where we need output, this happens:
   // commented out as might need condition, while developing new stuff
   if (saveFile === 'csv') {
