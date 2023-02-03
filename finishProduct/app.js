@@ -12,7 +12,7 @@ const outputFile = '../dataOutput/kaksitoista_kuukautta_nayte.csv'
 const saveFile = 'csv';
 
 // select mode, so change that string here if need to change:
-const mode = 'clientKnowledgeAveragePrices';
+const mode = 'clientKnowledgeAveragePricesPerSqM';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -72,9 +72,9 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
     console.log('sorted: ', sortedArray);
   }
 
-  if (mode === 'clientKnowledgeAveragePrices') {
+  if (mode === 'clientKnowledgeAveragePricesPerSqM') {
     console.log('calling client knowledge 1');
-    sortedArray = tools.clientKnowledgeAveragePrices(json);
+    sortedArray = tools.clientKnowledgeAveragePricesPerSqm(json);
     console.log('sorted: ', sortedArray);
   }
 

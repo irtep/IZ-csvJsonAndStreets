@@ -898,7 +898,7 @@ module.exports = {
 
     // this gives statistic summary of listings
     // aka. CLIENTKNOWLEDGE case, shows average price, but by average by squaremeter
-    clientKnowledgeAveragePrices: function (json) {
+    clientKnowledgeAveragePricesPerSqm: function (json) {
       //console.log('looks like this: ', json);      
       const stats = [];
       
