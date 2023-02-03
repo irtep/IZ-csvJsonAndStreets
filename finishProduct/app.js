@@ -5,11 +5,11 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/Vuo_lautta_myynnissa_kysynta_07-12_22_stats.csv'
+const outputFile = '../dataOutput/kaksitoista_kuukautta_nayte.csv'
 
 // save file. switch this, if testing and is not necessary save the results
 // options: 'csv', false
-const saveFile = false;
+const saveFile = 'csv';
 
 // select mode, so change that string here if need to change:
 const mode = 'clientKnowledgeAveragePrices';
