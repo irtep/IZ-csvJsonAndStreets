@@ -9,10 +9,10 @@ const outputFile = '../dataOutput/kaksitoista_kuukautta_nayte.csv'
 
 // save file. switch this, if testing and is not necessary save the results
 // options: 'csv', false
-const saveFile = 'csv';
+const saveFile = false;
 
 // select mode, so change that string here if need to change:
-const mode = 'clientKnowledgeAveragePricesPerSqM';
+const mode = 'clientKnowledgeDecades';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -23,7 +23,8 @@ Modes:
 for example in Case Continuacion. Also removes dublicates (wish from Continuacion),
 'listingsStats': This creates a statistic display, by zip_codes, listings.
 'demandStats': Same as above, but gives stats about demands (visits),
-'clientKnowledgeAveragePrices' clientKnowledge product case, lists prices, same as listingsStats, but by squaremeter prices, and added name of town
+'clientKnowledgeAveragePricesPerSqM' clientKnowledge product case, lists prices, same as listingsStats, but by squaremeter prices, and added name of town
+'clientKnowledgeDecades' clientKnowledge product case, same as their average price, but with decades added
 //
 */
 
@@ -75,6 +76,12 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
   if (mode === 'clientKnowledgeAveragePricesPerSqM') {
     console.log('calling client knowledge 1');
     sortedArray = tools.clientKnowledgeAveragePricesPerSqm(json);
+    console.log('sorted: ', sortedArray);
+  }
+
+  if (mode === 'clientKnowledgeDecades') {
+    console.log('calling client knowledge decades');
+    sortedArray = tools.clientKnowledgeDecades(json);
     console.log('sorted: ', sortedArray);
   }
 

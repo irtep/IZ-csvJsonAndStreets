@@ -1085,5 +1085,221 @@ module.exports = {
         }   
       });
       return stats;
-    }       
+    },
+
+    // this gives statistic summary of listings
+    // aka. CLIENTKNOWLEDGE case, shows average price, but by average by squaremeter
+    // also, gives decades based on build year
+    clientKnowledgeDecades: function (json) {
+      //console.log('looks like this: ', json);      
+      const stats = [];
+      
+      // for each all rows
+      json.forEach( row => {
+
+        // only, when price is set and only if habitation type is "ownership"
+        if (row.price > 1 && row.habitation_type === '1') {
+
+          let dublicated = false;
+          // for each all stats, to check if zip_code already there
+          stats.forEach( (entry, i) => {
+            if (row.zip_code === entry.postinumero) {
+              // mark as dublicated
+              dublicated = true;
+              // and add the stats
+              //console.log('dub, goes: ', entry);
+              // tässä inffejä hinnassa
+              entry = updateRow(entry, row, true);
+            }
+          });
+  
+          // if not there already, make a new entry
+          if (dublicated === false) {
+            let vuosikymmen = 'ei tietoa';
+
+            if (row.build_year !== undefined && row.build_year !== '') {
+              const numbered_year = Number(row.build_year);
+
+              if (numbered_year < 1900) { vuosikymmen = '< 1900'; }
+              if (numbered_year > 1899 && numbered_year < 1910) { vuosikymmen = '1900-1909'; }
+              if (numbered_year > 1910 && numbered_year < 1920) { vuosikymmen = '1910-1919'; }
+              if (numbered_year > 1920 && numbered_year < 1930) { vuosikymmen = '1920-1929'; }
+              if (numbered_year > 1930 && numbered_year < 1940) { vuosikymmen = '1930-1939'; }
+              if (numbered_year > 1940 && numbered_year < 1950) { vuosikymmen = '1940-1949'; }
+              if (numbered_year > 1950 && numbered_year < 1960) { vuosikymmen = '1950-1959'; }
+              if (numbered_year > 1960 && numbered_year < 1970) { vuosikymmen = '1960-1969'; }
+              if (numbered_year > 1970 && numbered_year < 1980) { vuosikymmen = '1970-1979'; }
+              if (numbered_year > 1980 && numbered_year < 1990) { vuosikymmen = '1980-1989'; }
+              if (numbered_year > 1990 && numbered_year < 2000) { vuosikymmen = '1990-1999'; }
+              if (numbered_year > 2000 && numbered_year < 2010) { vuosikymmen = '2000-2009'; }
+              if (numbered_year > 2010 && numbered_year < 2020) { vuosikymmen = '2010-2019'; } 
+              if (numbered_year > 2020 && numbered_year < 2030) { vuosikymmen = '2020-2029'; }
+              if (numbered_year > 2030 && numbered_year < 2040) { vuosikymmen = '2030-2039'; }  
+            }
+            let entry = {
+     
+              // averages
+              vuosikymmen: vuosikymmen,
+              valmistumisvuosi: row.build_year,
+              postinumero: row.zip_code,
+              kunta: row.city_name,
+              kerrostalo_yksiot_keskiarvo: 0,
+              kerrostalo_kaksiot_keskiarvo: 0,
+              kerrostalo_kolmiotTaiIsommat_keskiarvo: 0,
+              rivitalo_yksiot_keskiarvo: 0,
+              rivitalo_kaksiot_keskiarvo: 0,
+              rivitalo_kolmiotTaiIsommat_keskiarvo: 0,
+              omakotitalo_yksiot_keskiarvo: 0,
+              omakotitalo_kaksiot_keskiarvo: 0,
+              omakotitalo_kolmiotTaiIsommat_keskiarvo: 0,
+              muut_yksiot_keskiarvo: 0,
+              muut_kaksiot_keskiarvo: 0,
+              muut_kolmiotTaiIsommat_keskiarvo: 0,
+              // quantities
+              kerrostalo_yksioita_yhteensa: 0,
+              kerrostalo_kaksioita_yhteensa: 0,
+              kerrostalo_kolmiotTaiIsommat_yhteensa: 0,
+              rivitalo_yksioita_yhteensa: 0,
+              rivitalo_kaksioita_yhteensa: 0,
+              rivitalo_kolmiotTaiIsommat_yhteensa: 0,
+              omakotitalo_yksioita_yhteensa: 0,
+              omakotitalo_kaksioita_yhteensa: 0,
+              omakotitalo_kolmiotTaiIsommat_yhteensa: 0,
+              muut_yksioita_yhteensa: 0,
+              muut_kaksioita_yhteensa: 0,
+              muut_kolmiotTaiIsommat_yhteensa: 0,
+              // prices total
+              kerrostalo_yksioiden_hinnat_yhteensa: 0,
+              kerrostalo_kaksioiden_hinnat_yhteensa: 0,
+              kerrostalo_kolmiotTaiIsommat_hinnat_yhteensa: 0,
+              rivitalo_yksioiden_hinnat_yhteensa: 0,
+              rivitalo_kaksioiden_hinnat_yhteensa: 0,
+              rivitalo_kolmiotTaiIsommat_hinnat_yhteensa: 0,
+              omakotitalo_yksioiden_hinnat_yhteensa: 0,
+              omakotitalo_kaksioiden_hinnat_yhteensa: 0,
+              omakotitalo_kolmiotTaiIsommat_hinnat_yhteensa: 0,
+              muut_yksioiden_hinnat_yhteensa: 0,
+              muut_kaksioiden_hinnat_yhteensa: 0,
+              muut_kolmiotTaiIsommat_hinnat_yhteensa: 0,
+            }
+  
+            // add what it is and how much it cost
+            const pricePerSqM = Number((Number(row.price) / Number(row.size)).toFixed(2));
+            //console.log('price per sqm : ', pricePerSqM);
+           
+            // apartments:
+            if (row.building_type === '1') {
+              if (row.rooms === '1') {
+                const rowsToUpdate = [
+                  'kerrostalo_yksioita_yhteensa',
+                  'kerrostalo_yksioiden_hinnat_yhteensa',
+                  'kerrostalo_yksiot_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+              else if (row.rooms === '2') {
+                const rowsToUpdate = [
+                  'kerrostalo_kaksioita_yhteensa',
+                  'kerrostalo_kaksioiden_hinnat_yhteensa',
+                  'kerrostalo_kaksiot_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+              else if (Number(row.rooms) > 2) {
+                const rowsToUpdate = [
+                  'kerrostalo_kolmiotTaiIsommat_yhteensa',
+                  'kerrostalo_kolmiotTaiIsommat_hinnat_yhteensa',
+                  'kerrostalo_kolmiotTaiIsommat_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+            }
+            // row houses:
+            else if (row.building_type === '2') {              
+              if (row.rooms === '1') {
+                const rowsToUpdate = [
+                  'rivitalo_yksioita_yhteensa',
+                  'rivitalo_yksioiden_hinnat_yhteensa',
+                  'rivitalo_yksiot_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+              else if (row.rooms === '2') {
+                const rowsToUpdate = [
+                  'rivitalo_kaksioita_yhteensa',
+                  'rivitalo_kaksioiden_hinnat_yhteensa',
+                  'rivitalo_kaksiot_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+              else if (Number(row.rooms) > 2) {
+                const rowsToUpdate = [
+                  'rivitalo_kolmiotTaiIsommat_yhteensa',
+                  'rivitalo_kolmiotTaiIsommat_hinnat_yhteensa',
+                  'rivitalo_kolmiotTaiIsommat_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+            }        
+            // own houses:
+            else if (row.building_type === '4') {
+              if (row.rooms === '1') {
+                const rowsToUpdate = [
+                  'omakotitalo_yksioita_yhteensa',
+                  'omakotitalo_yksioiden_hinnat_yhteensa',
+                  'omakotitalo_yksiot_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+              else if (row.rooms === '2') {
+                const rowsToUpdate = [
+                  'omakotitalo_kaksioita_yhteensa',
+                  'omakotitalo_kaksioiden_hinnat_yhteensa',
+                  'omakotitalo_kaksiot_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+              else if (Number(row.rooms) > 2) {
+                const rowsToUpdate = [
+                  'omakotitalo_kolmiotTaiIsommat_yhteensa',
+                  'omakotitalo_kolmiotTaiIsommat_hinnat_yhteensa',
+                  'omakotitalo_kolmiotTaiIsommat_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+            }  
+            // others
+            else {
+              if (row.rooms === '1') {
+                const rowsToUpdate = [
+                  'muut_yksioita_yhteensa',
+                  'muut_yksioiden_hinnat_yhteensa',
+                  'muut_yksiot_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+              else if (row.rooms === '2') {
+                const rowsToUpdate = [
+                  'muut_kaksioita_yhteensa',
+                  'muut_kaksioiden_hinnat_yhteensa',
+                  'muut_kaksiot_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+              else if (Number(row.rooms) > 2) {
+                const rowsToUpdate = [
+                  'muut_kolmiotTaiIsommat_yhteensa',
+                  'muut_kolmiotTaiIsommat_hinnat_yhteensa',
+                  'muut_kolmiotTaiIsommat_keskiarvo'
+                ];
+                entry = updateStatsRow(entry, rowsToUpdate, pricePerSqM);
+              }
+            }              
+            //console.log('uusi: ', entry); ok!
+            stats.push(entry);
+          }
+        }   
+      });
+      return stats;
+    }              
 }
