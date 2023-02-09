@@ -5,14 +5,14 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/kaksitoista_kuukautta_nayte.csv'
+const outputFile = '../dataOutput/kaksitoista_kuukautta_nayte_at.csv'
 
 // save file. switch this, if testing and is not necessary save the results
 // options: 'csv', false
-const saveFile = false;
+const saveFile = 'csv';
 
 // select mode, so change that string here if need to change:
-const mode = 'clientKnowledgeDecades';
+const mode = 'clientKnowledgeAveragePricesPerSqM';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 
@@ -21,7 +21,7 @@ Modes:
  Case ERBC as well
 'sanitateStreets: in this there are no visits, clicks etc. Just regular street sanitation,
 for example in Case Continuacion. Also removes dublicates (wish from Continuacion),
-'listingsStats': This creates a statistic display, by zip_codes, listings.
+'listingsStats': This creates a statistic display, by zip_codes, listings. Huom! habitation_type pitää suodattaa myytävistä, ettei tule asumisoikeuskamaa
 'demandStats': Same as above, but gives stats about demands (visits),
 'clientKnowledgeAveragePricesPerSqM' clientKnowledge product case, lists prices, same as listingsStats, but by squaremeter prices, and added name of town
 'clientKnowledgeDecades' clientKnowledge product case, same as their average price, but with decades added

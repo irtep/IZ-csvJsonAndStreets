@@ -162,7 +162,7 @@ const updateRow = (entry, row, squaremeters) => {
 
   // if should be squaremeters, then use this:
   if (squaremeters) { 
-    priceToUse = Number((Number(row.price) / Number(row.size)).toFixed(2));
+    priceToUse = Number(row.price_psqm);
   }
 
   // apartments:
@@ -906,7 +906,7 @@ module.exports = {
       json.forEach( row => {
 
         // only, when price is set and only if habitation type is "ownership"
-        if (row.price > 1 && row.habitation_type === '1') {
+        if (row.price_psqm > 1 && row.habitation_type === '1') {
 
           let dublicated = false;
           // for each all stats, to check if zip_code already there
@@ -968,7 +968,7 @@ module.exports = {
             }
   
             // add what it is and how much it cost
-            const pricePerSqM = Number((Number(row.price) / Number(row.size)).toFixed(2));
+            const pricePerSqM = Number(row.price_psqm);
             //console.log('price per sqm : ', pricePerSqM);
            
             // apartments:
