@@ -5,14 +5,14 @@ const tools = require('./functions/functions');
 // input where should be a json-file
 const inputFile = '../dataInput/newJson.json';
 // output, where the final product comes. Should be .csv
-const outputFile = '../dataOutput/kaksitoista_kuukautta_nayte_at.csv'
+const outputFile = '../dataOutput/12kk_nayte_vuosikymmenet.csv'
 
 // save file. switch this, if testing and is not necessary save the results
 // options: 'csv', false
 const saveFile = 'csv';
 
 // select mode, so change that string here if need to change:
-const mode = 'clientKnowledgeAveragePricesPerSqM';
+const mode = 'clientKnowledgeDecades';
 /*
 Modes:
 'withVisits': this leaves only one row per card id, without it, every months statistics would have 

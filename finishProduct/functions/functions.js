@@ -1103,6 +1103,10 @@ module.exports = {
           let dublicated = false;
           // for each all stats, to check if zip_code already there
           stats.forEach( (entry, i) => {
+
+            // eli tähän varmaan, että jos zip code ja vuosikymmen on sama
+            // niin sitten sitten: MUOKKAA
+
             if (row.zip_code === entry.postinumero) {
               // mark as dublicated
               dublicated = true;
@@ -1122,25 +1126,25 @@ module.exports = {
 
               if (numbered_year < 1900) { vuosikymmen = '< 1900'; }
               if (numbered_year > 1899 && numbered_year < 1910) { vuosikymmen = '1900-1909'; }
-              if (numbered_year > 1910 && numbered_year < 1920) { vuosikymmen = '1910-1919'; }
-              if (numbered_year > 1920 && numbered_year < 1930) { vuosikymmen = '1920-1929'; }
-              if (numbered_year > 1930 && numbered_year < 1940) { vuosikymmen = '1930-1939'; }
-              if (numbered_year > 1940 && numbered_year < 1950) { vuosikymmen = '1940-1949'; }
-              if (numbered_year > 1950 && numbered_year < 1960) { vuosikymmen = '1950-1959'; }
-              if (numbered_year > 1960 && numbered_year < 1970) { vuosikymmen = '1960-1969'; }
-              if (numbered_year > 1970 && numbered_year < 1980) { vuosikymmen = '1970-1979'; }
-              if (numbered_year > 1980 && numbered_year < 1990) { vuosikymmen = '1980-1989'; }
-              if (numbered_year > 1990 && numbered_year < 2000) { vuosikymmen = '1990-1999'; }
-              if (numbered_year > 2000 && numbered_year < 2010) { vuosikymmen = '2000-2009'; }
-              if (numbered_year > 2010 && numbered_year < 2020) { vuosikymmen = '2010-2019'; } 
-              if (numbered_year > 2020 && numbered_year < 2030) { vuosikymmen = '2020-2029'; }
-              if (numbered_year > 2030 && numbered_year < 2040) { vuosikymmen = '2030-2039'; }  
+              if (numbered_year > 1909 && numbered_year < 1920) { vuosikymmen = '1910-1919'; }
+              if (numbered_year > 1919 && numbered_year < 1930) { vuosikymmen = '1920-1929'; }
+              if (numbered_year > 1929 && numbered_year < 1940) { vuosikymmen = '1930-1939'; }
+              if (numbered_year > 1939 && numbered_year < 1950) { vuosikymmen = '1940-1949'; }
+              if (numbered_year > 1949 && numbered_year < 1960) { vuosikymmen = '1950-1959'; }
+              if (numbered_year > 1959 && numbered_year < 1970) { vuosikymmen = '1960-1969'; }
+              if (numbered_year > 1969 && numbered_year < 1980) { vuosikymmen = '1970-1979'; }
+              if (numbered_year > 1979 && numbered_year < 1990) { vuosikymmen = '1980-1989'; }
+              if (numbered_year > 1989 && numbered_year < 2000) { vuosikymmen = '1990-1999'; }
+              if (numbered_year > 1999 && numbered_year < 2010) { vuosikymmen = '2000-2009'; }
+              if (numbered_year > 2009 && numbered_year < 2020) { vuosikymmen = '2010-2019'; } 
+              if (numbered_year > 2019 && numbered_year < 2030) { vuosikymmen = '2020-2029'; }
+              if (numbered_year > 2029 && numbered_year < 2040) { vuosikymmen = '2030-2039'; }  
             }
             let entry = {
      
               // averages
               vuosikymmen: vuosikymmen,
-              valmistumisvuosi: row.build_year,
+              //valmistumisvuosi: row.build_year, was in checking purpose
               postinumero: row.zip_code,
               kunta: row.city_name,
               kerrostalo_yksiot_keskiarvo: 0,
@@ -1184,7 +1188,8 @@ module.exports = {
             }
   
             // add what it is and how much it cost
-            const pricePerSqM = Number((Number(row.price) / Number(row.size)).toFixed(2));
+            //const pricePerSqM = Number((Number(row.price) / Number(row.size)).toFixed(2)); // not needed anymore, as row.price_psqm is in snowflake
+            const pricePerSqM = Number(row.price_psqm);
             //console.log('price per sqm : ', pricePerSqM);
            
             // apartments:
