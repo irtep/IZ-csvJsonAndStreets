@@ -82,7 +82,7 @@ fs.readFile(inputFile, 'utf8', async (err, data) => {
   if (mode === 'clientKnowledgeDecades') {
     console.log('calling client knowledge decades');
     sortedArray = tools.clientKnowledgeDecades(json);
-    console.log('sorted: ', sortedArray);
+    //console.log('sorted: ', sortedArray);
   }
 
   // then in most cases, where we need output, this happens:
